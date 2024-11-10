@@ -19,7 +19,7 @@ export default function NavBar({ onOpen, onSearch }) {
           <div className="form-control">
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search Client"
               onChange={handleSearchChange}
               className="input input-bordered w-48 md:w-auto"
             />
