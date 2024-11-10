@@ -74,7 +74,7 @@ export const deleteClient = async (clientId) => {
 
 export const searchClients = async (searchTerm) => {
   const { rows } = await query(
-    `SELECT * FROM clients WHERE name ILIKE $1 OR email ILIKE $1 OR job ILIKE $1`,
+    `SELECT * FROM clients WHERE name ILIKE $1 OR email ILIKE $1 OR contact ILIKE $1 OR house_no ILIKE $1 OR street ILIKE $1 OR postal_code ILIKE $1 OR rent_status ILIKE $1`,
     [`%${searchTerm}%`]
   );
   return rows;

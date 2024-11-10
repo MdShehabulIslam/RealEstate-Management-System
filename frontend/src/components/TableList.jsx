@@ -10,13 +10,25 @@ export default function TableList({
   searchTerm,
 }) {
   const [error, setError] = useState(null);
-  const filteredData = tableData.filter(
-    (client) =>
+
+  const filteredData = tableData.filter((client) => {
+    const rentStatusText = client.rent_status ? "Paid" : "Pending";
+
+    const contactWithoutSpaces = client.contact.replace(/\s+/g, "");
+    const searchTermWithoutSpaces = searchTerm
+      .replace(/\s+/g, "")
+      .toLowerCase();
+
+    return (
       client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.job.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+      contactWithoutSpaces.includes(searchTermWithoutSpaces) ||
+      client.house_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.street.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.postal_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      rentStatusText.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this client?"

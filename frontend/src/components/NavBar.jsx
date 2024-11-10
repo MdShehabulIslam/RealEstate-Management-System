@@ -1,5 +1,4 @@
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import HomeIcon from "@mui/icons-material/Home";
 export default function NavBar({ onOpen, onSearch }) {
   const handleSearchChange = (event) => {
