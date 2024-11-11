@@ -17,7 +17,7 @@ export default function ModalForm({
   const [rent_status, setStatus] = useState(false);
 
   const handleStatusChange = (e) => {
-    setStatus(e.target.value === "Active");
+    setStatus(e.target.value === "Paid");
   };
 
   const handleSubmit = async (e) => {
@@ -140,12 +140,12 @@ export default function ModalForm({
                 />
               </label>
               <select
-                value={rent_status ? "Active" : "Inactive"}
+                value={rent_status ? "Paid" : "Payment Pending"}
                 className="select select-bordered w-full max-w-xs"
                 onChange={handleStatusChange}
               >
-                <option>Inactive</option>
-                <option>Active</option>
+                <option>Payment Pending</option>
+                <option>Paid</option>
               </select>
             </div>
 
