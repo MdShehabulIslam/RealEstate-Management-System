@@ -79,3 +79,4 @@ export const searchClients = async (searchTerm) => {
   );
   return rows;
 };
+

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 export default function TableList({
   handleOpen,
@@ -9,6 +10,26 @@ export default function TableList({
   setTableData,
   searchTerm,
 }) {
+  let obj = new Date();
+  let monthIndex = obj.getUTCMonth(); // Month index (0 for January, 11 for December)
+  let year = obj.getUTCFullYear();
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let month = monthNames[monthIndex];
+
   const [error, setError] = useState(null);
 
   const filteredData = tableData.filter((client) => {
@@ -48,6 +69,21 @@ export default function TableList({
   return (
     <>
       {error && <div className="alert alert-error">{error}</div>}
+
+      <div className="overflow-x-auto m-4">
+        <div className="flex justify-between items-center">
+          <div className="flex-1 text-start">
+            <h2 className="text-xl font-bold ml-4">
+              {month} {year}
+            </h2>
+          </div>
+          <div>
+            <button className="btn btn-error rounded-xl mr-4">
+              Reset <RestartAltIcon />
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="overflow-x-auto mt-10">
         <table className="table">
