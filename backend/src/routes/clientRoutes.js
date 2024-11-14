@@ -10,4 +10,6 @@ router.put("/clients/:id", clientController.updateClient);
 router.delete("/clients/:id", clientController.deleteClient);
 router.get("/clients/search", clientController.searchClients);
 
+router.post("/clients/reset-rent-status", clientController.resetRentStatus);
+
 export default router;

@@ -14,7 +14,7 @@ export const createClient = async (req, res) => {
   try {
     const clientData = req.body;
     const newClient = await clientService.createClient(clientData);
-    res.status(200).json(newClient);
+    res.status(201).json(newClient);
   } catch (err) {
     console.error("Error adding client:", err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -62,5 +62,19 @@ export const searchClients = async (req, res) => {
   } catch (error) {
     console.error("Error searching clients:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const resetRentStatus = async (req, res) => {
+  try {
+    const rowCount = await clientService.resetRentStatus();
+    if (rowCount > 0) {
+      res.status(200).json({ message: "All rent statuses reset to Pending." });
+    } else {
+      res.status(404).json({ message: "No clients found to update." });
+    }
+  } catch (error) {
+    console.error("Error resetting rent statuses:", error);
+    res.status(500).json({ message: "Failed to reset rent statuses." });
   }
 };

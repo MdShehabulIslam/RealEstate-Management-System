@@ -80,3 +80,9 @@ export const searchClients = async (searchTerm) => {
   return rows;
 };
 
+export const resetRentStatus = async () => {
+  const { rows } = await query(
+    `UPDATE clients SET rent_status = false` // or 'Pending' if that is your intended value
+  );
+  return rows; // Optionally, you can return the updated clients or just a success message
+};

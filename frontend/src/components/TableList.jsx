@@ -9,9 +9,10 @@ export default function TableList({
   tableData,
   setTableData,
   searchTerm,
+  handleReset,
 }) {
   let obj = new Date();
-  let monthIndex = obj.getUTCMonth(); // Month index (0 for January, 11 for December)
+  let monthIndex = obj.getUTCMonth();
   let year = obj.getUTCFullYear();
 
   const monthNames = [
@@ -78,7 +79,30 @@ export default function TableList({
             </h2>
           </div>
           <div>
-            <button className="btn btn-error rounded-xl mr-4">
+            <button
+              className="btn btn-error rounded-xl mr-4"
+              onClick={async () => {
+                try {
+                  // Make a POST request to reset rent statuses
+                  const response = await axios.post(
+                    "http://localhost:3000/api/clients/reset-rent-status"
+                  );
+
+                  // Assuming a successful response, update the table data
+                  if (response.status === 200) {
+                    setTableData((prevData) =>
+                      prevData.map((client) => ({
+                        ...client,
+                        rent_status: "Pending", // Update all clients to 'Pending' in the frontend
+                      }))
+                    );
+                    alert(response.data.message); // Optional: display a success message
+                  }
+                } catch (error) {
+                  alert("Failed to reset rent statuses."); // Optional: display an error message
+                }
+              }}
+            >
               Reset <RestartAltIcon />
             </button>
           </div>
