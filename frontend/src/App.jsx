@@ -3,6 +3,7 @@ import "./App.css";
 import ModalForm from "./components/ModalForm";
 import NavBar from "./components/NavBar";
 import TableList from "./components/TableList";
+import Login from "./components/Login";
 import axios from "axios";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [clientData, setClientData] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const fetchClients = async () => {
     try {
@@ -23,8 +25,10 @@ function App() {
   };
 
   useEffect(() => {
-    fetchClients();
-  }, []);
+    if (isLoggedIn) {
+      fetchClients();
+    }
+  }, [isLoggedIn]);
 
   const handleOpen = (mode, client) => {
     setClientData(client);
@@ -44,7 +48,6 @@ function App() {
       } catch (error) {
         console.error("Error adding client:", error);
       }
-      console.log("modal mode Add");
     } else {
       console.log("Updating client with ID:", clientData.id);
       try {
@@ -63,28 +66,6 @@ function App() {
       }
     }
   };
-
-  // const handleReset = async () => {
-  //   const confirmReset = window.confirm(
-  //     "Are you sure you want to reset all rent statuses to 'Pending'?"
-  //   );
-  //   if (confirmReset) {
-  //     try {
-  //       // Call the backend to reset all statuses
-  //       await axios.post("http://localhost:3000/api/clients/reset-rent-status");
-
-  //       // Update the local state
-  //       setTableData((prevData) =>
-  //         prevData.map((client) => ({
-  //           ...client,
-  //           rent_status: "Pending", // Set rent_status to "Pending" (or false)
-  //         }))
-  //       );
-  //     } catch (err) {
-  //       setError(err.message);
-  //     }
-  //   }
-  // };
 
   const handleReset = async () => {
     const confirmReset = window.confirm(
@@ -109,23 +90,40 @@ function App() {
     }
   };
 
+  const handleLogin = (email, password) => {
+    const validEmail = import.meta.env.VITE_ADMIN_EMAIL;
+    const validPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+
+    if (email === validEmail && password === validPassword) {
+      setIsLoggedIn(true);
+    } else {
+      alert("Invalid email or password.");
+    }
+  };
+
   return (
     <div className="App">
-      <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
-      <TableList
-        setTableData={setTableData}
-        tableData={tableData}
-        handleOpen={handleOpen}
-        searchTerm={searchTerm}
-        handleReset={handleReset}
-      />
-      <ModalForm
-        isOpen={isOpen}
-        OnSubmit={handleSubmit}
-        onClose={() => setIsOpen(false)}
-        mode={modalMode}
-        clientData={clientData}
-      />
+      {!isLoggedIn ? (
+        <Login onLogin={handleLogin} />
+      ) : (
+        <>
+          <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
+          <TableList
+            setTableData={setTableData}
+            tableData={tableData}
+            handleOpen={handleOpen}
+            searchTerm={searchTerm}
+            handleReset={handleReset}
+          />
+          <ModalForm
+            isOpen={isOpen}
+            OnSubmit={handleSubmit}
+            onClose={() => setIsOpen(false)}
+            mode={modalMode}
+            clientData={clientData}
+          />
+        </>
+      )}
     </div>
   );
 }

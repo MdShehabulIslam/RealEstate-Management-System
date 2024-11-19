@@ -15,6 +15,8 @@
     "@mui/icons-material": "^6.1.6",
     "@mui/material": "^6.1.6",
     "axios": "^1.7.7",
+    "crud-frontend": "file:",
+    "dotenv": "^16.4.5",
     "keep-react": "^1.6.1",
     "phosphor-react": "^1.4.1",
     "react": "^18.3.1",

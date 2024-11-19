@@ -90,6 +90,7 @@ export default function TableList({
 
                   // Assuming a successful response, update the table data
                   if (response.status === 200) {
+                    handleReset();
                     setTableData((prevData) =>
                       prevData.map((client) => ({
                         ...client,
@@ -110,7 +111,7 @@ export default function TableList({
       </div>
 
       <div className="overflow-x-auto mt-10">
-        <table className="table">
+        <table className="table text-sm">
           <thead>
             <tr>
               <th></th>
