@@ -144,7 +144,7 @@ export default function ModalForm({
                 className="select select-bordered w-full max-w-xs"
                 onChange={handleStatusChange}
               >
-                <option>Payment Pending</option>
+                <option>Pending</option>
                 <option>Paid</option>
               </select>
             </div>
