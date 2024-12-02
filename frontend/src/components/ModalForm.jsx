@@ -66,102 +66,110 @@ export default function ModalForm({
     <>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}
       <dialog id="my_modal_3" className="modal" open={isOpen}>
-        <div className="modal-box">
-          <h3 className="font-bold text-lg py-4">
-            {mode === "edit" ? "Edit Client" : "Client Details"}
-          </h3>
-          <form method="dialog" onSubmit={handleSubmit}>
-            <label className="input input-bordered my-4 flex items-center gap-2">
-              Name
-              <input
-                type="text"
-                className="grow"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <label className="input input-bordered my-4 flex items-center gap-2">
-              Email
-              <input
-                type="text"
-                className="grow"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            <label className="input input-bordered my-4 flex items-center gap-2">
-              Contact
-              <input
-                type="text"
-                className="grow"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-              />
-            </label>
+        <div className="modal-box w-11/12 max-w-3xl p-4 sm:p-6">
+          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <h3 className="font-bold text-lg py-4">
+              {mode === "edit" ? "Edit Tenant Information" : "Add New Tenant"}
+            </h3>
+            <form method="dialog" onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="input input-bordered flex items-center gap-2">
+                  Tenant Name
+                  <input
+                    type="text"
+                    className="grow"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2">
+                  Email
+                  <input
+                    type="email"
+                    className="grow"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2">
+                  Contact Number
+                  <input
+                    type="text"
+                    className="grow"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2">
+                  House / Apartment No.
+                  <input
+                    type="text"
+                    className="grow"
+                    value={house_no}
+                    onChange={(e) => setHouseNum(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2">
+                  Street Address
+                  <input
+                    type="text"
+                    className="grow"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2">
+                  Postal Code
+                  <input
+                    type="text"
+                    className="grow"
+                    value={postal_code}
+                    onChange={(e) => setPostalCode(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
 
-            <label className="input input-bordered my-4 flex items-center gap-2">
-              House / Apartment
-              <input
-                type="text"
-                className="grow"
-                value={house_no}
-                onChange={(e) => setHouseNum(e.target.value)}
-              />
-            </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label className="input input-bordered flex items-center gap-2">
+                  Monthly Rent
+                  <input
+                    type="number"
+                    className="grow"
+                    value={rent_amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                  />
+                </label>
+                <select
+                  value={rent_status ? "Paid" : "Unpaid"}
+                  className="select select-bordered w-full"
+                  onChange={handleStatusChange}
+                >
+                  <option value="Unpaid">Unpaid</option>
+                  <option value="Paid">Paid</option>
+                </select>
+              </div>
 
-            <label className="input input-bordered my-4 flex items-center gap-2">
-              Street
-              <input
-                type="text"
-                className="grow"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-              />
-            </label>
-
-            <label className="input input-bordered my-4 flex items-center gap-2">
-              Postal Code
-              <input
-                type="text"
-                className="grow"
-                value={postal_code}
-                onChange={(e) => setPostalCode(e.target.value)}
-              />
-            </label>
-
-            <div className="flex mb-4 justify-between my-4">
-              <label className="input input-bordered mr-4 flex items-center gap-2">
-                Rent
-                <input
-                  type="number"
-                  className="grow"
-                  value={rent_amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </label>
-              <select
-                value={rent_status ? "Paid" : "Payment Pending"}
-                className="select select-bordered w-full max-w-xs"
-                onChange={handleStatusChange}
-              >
-                <option>Pending</option>
-                <option>Paid</option>
-              </select>
-            </div>
-
-            <button
-              type="button"
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              onClick={onClose}
-            >
-              ✕
-            </button>
-
-            <button type="submit" className="btn btn-success">
-              {" "}
-              {mode === "edit" ? "Save Changes" : "Add Client"}
-            </button>
-          </form>
+              <div className="modal-action flex justify-between mt-6">
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-success">
+                  {mode === "edit" ? "Save Changes" : "Add Tenant"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </dialog>
     </>

@@ -69,104 +69,155 @@ export default function TableList({
 
   return (
     <>
-      {error && <div className="alert alert-error">{error}</div>}
-
-      <div className="overflow-x-auto m-4">
-        <div className="flex justify-between items-center">
-          <div className="flex-1 text-start">
-            <h2 className="text-xl font-bold ml-4">
-              {month} {year}
-            </h2>
-          </div>
-          <div>
-            <button
-              className="btn btn-error rounded-xl mr-4"
-              onClick={async () => {
-                try {
-                  // Make a POST request to reset rent statuses
-                  const response = await axios.post(
-                    "http://localhost:3000/api/clients/reset-rent-status"
-                  );
-
-                  // Assuming a successful response, update the table data
-                  if (response.status === 200) {
-                    handleReset();
-                    setTableData((prevData) =>
-                      prevData.map((client) => ({
-                        ...client,
-                        rent_status: "Pending", // Update all clients to 'Pending' in the frontend
-                      }))
+      <div className="relative z-0">
+        <div className="overflow-x-auto m-4">
+          <div className="flex justify-between items-center">
+            <div className="flex-1 text-start">
+              <h2 className="text-xl font-bold ml-4">
+                {month} {year}
+              </h2>
+            </div>
+            <div>
+              <button
+                className="btn btn-error rounded-xl mr-4"
+                onClick={async () => {
+                  try {
+                    const confirmReset = window.confirm(
+                      "Are you sure you want to reset all rent statuses to 'Pending'?"
                     );
-                    alert(response.data.message); // Optional: display a success message
+                    
+                    if (confirmReset) {
+                      const response = await axios.post(
+                        "http://localhost:3000/api/clients/reset-rent-status"
+                      );
+
+                      if (response.status === 200 && Array.isArray(response.data)) {
+                        setTableData(response.data);
+                        setError(null);
+                      } else {
+                        setError("No clients found to update.");
+                      }
+                    }
+                  } catch (err) {
+                    setError(err.response?.data?.message || "Failed to reset rent statuses. Please try again.");
                   }
-                } catch (error) {
-                  alert("Failed to reset rent statuses."); // Optional: display an error message
-                }
-              }}
-            >
-              Reset <RestartAltIcon />
-            </button>
+                }}
+              >
+                Reset <RestartAltIcon />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-4">
+          {error && <div className="alert alert-error mb-4">{error}</div>}
+          
+          <div className="overflow-x-auto bg-base-100 rounded-lg shadow">
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th>Tenant Name</th>
+                  <th>Contact Info</th>
+                  <th>Property Details</th>
+                  <th>Monthly Rent</th>
+                  <th className={"text-center"}>Rent Status ({month} {year})</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4">
+                      No tenants found matching your search
+                    </td>
+                  </tr>
+                ) : (
+                  filteredData.map((client) => (
+                    <tr key={client.id} className="hover">
+                      <td>{client.name}</td>
+                      <td>
+                        <div>{client.email}</div>
+                        <div>{client.contact}</div>
+                      </td>
+                      <td>
+                        <div>House: {client.house_no}</div>
+                        <div>{client.street}</div>
+                        <div>Postal: {client.postal_code}</div>
+                      </td>
+                      <td className={"text-center"}>${client.rent_amount}</td>
+                      <td>
+                        <button
+                          className={`btn rounded-full w-30 ${
+                            client.rent_status
+                              ? `btn-success w-full`
+                              : `btn-outline btn-error`
+                          }`}
+                        >
+                          {client.rent_status ? "Paid" : "Unpaid"}
+                        </button>
+                      </td>
+                      <td className="flex gap-2">
+                        <button
+                          onClick={() => handleOpen("edit", client)}
+                          className="btn btn-warning rounded-xl w-15"
+                        >
+                          <BorderColorOutlinedIcon />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(client.id)}
+                          className="btn btn-error rounded-xl w-15"
+                        >
+                          <DeleteOutlineOutlinedIcon />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto mt-10">
-        <table className="table text-sm">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Contact</th>
-              <th>House / Apartment</th>
-              <th>Street</th>
-              <th>Postal Code</th>
-              <th>Rent Amount</th>
-              <th className={"text-center"}>Rent Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((client) => (
-              <tr key={client.id} className="hover">
-                <th>{client.id}</th>
-                <td>{client.name}</td>
-                <td>{client.email}</td>
-                <td>{client.contact}</td>
-                <td className={"text-center"}>{client.house_no}</td>
-                <td>{client.street}</td>
-                <td className={"text-center"}>{client.postal_code}</td>
-                <td className={"text-center"}>{client.rent_amount}</td>
-                <td>
-                  <button
-                    className={`btn rounded-full w-30 ${
-                      client.rent_status
-                        ? `btn-success w-full`
-                        : `btn-outline btn-accent`
-                    }`}
-                  >
-                    {client.rent_status ? "Paid" : "Pending"}
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleOpen("edit", client)}
-                    className="btn btn-warning rounded-xl w-15"
-                  >
-                    Edit <BorderColorOutlinedIcon />
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-error rounded-xl w-15"
-                    onClick={() => handleDelete(client.id)}
-                  >
-                    <DeleteOutlineOutlinedIcon />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Mobile View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {filteredData.map((client) => (
+          <div key={client.id} className="bg-base-200 p-4 rounded-lg shadow">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold">{client.name}</h3>
+              <button
+                className={`btn btn-sm rounded-full ${
+                  client.rent_status
+                    ? `btn-success`
+                    : `btn-outline btn-accent`
+                }`}
+              >
+                {client.rent_status ? "Paid" : "Pending"}
+              </button>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm"><span className="font-semibold">Email:</span> {client.email}</p>
+              <p className="text-sm"><span className="font-semibold">Contact:</span> {client.contact}</p>
+              <p className="text-sm"><span className="font-semibold">Address:</span> {client.house_no}, {client.street}</p>
+              <p className="text-sm"><span className="font-semibold">Postal Code:</span> {client.postal_code}</p>
+              <p className="text-sm"><span className="font-semibold">Rent Amount:</span> {client.rent_amount}</p>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => handleOpen("edit", client)}
+                className="btn btn-warning btn-sm rounded-xl flex-1"
+              >
+                Edit <BorderColorOutlinedIcon />
+              </button>
+              <button
+                className="btn btn-error btn-sm rounded-xl flex-1"
+                onClick={() => handleDelete(client.id)}
+              >
+                Delete <DeleteOutlineOutlinedIcon />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );

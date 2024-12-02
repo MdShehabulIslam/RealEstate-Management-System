@@ -1,35 +1,34 @@
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HomeIcon from "@mui/icons-material/Home";
-export default function NavBar({ onOpen, onSearch }) {
-  const handleSearchChange = (event) => {
-    onSearch(event.target.value);
-  };
 
+export default function NavBar({ onOpen, onSearch, handleLogout }) {
   return (
     <>
-      <div className="navbar bg-base-100 p-4 flex justify-between items-center">
-        <div className="navbar-start">
-          <a className="btn btn-ghost text-xl">
-            <HomeIcon />
-            NLCC
-          </a>
+      <div className="navbar bg-base-100 shadow-lg px-4">
+        <div className="flex-1">
+          <h1 className="text-xl font-bold">Tenant Management System</h1>
         </div>
-
-        <div className="navbar-center">
-          <div className="form-control">
+        <div className="flex-none gap-4">
+          <div className="form-control relative z-50">
             <input
               type="text"
-              placeholder="Search Client"
-              onChange={handleSearchChange}
-              className="input input-bordered w-48 md:w-auto rounded-xl"
+              placeholder="Search tenants..."
+              className="input input-bordered w-48 md:w-64"
+              onChange={(e) => onSearch(e.target.value)}
             />
           </div>
-        </div>
-
-        <div className="navbar-end">
-          <a className="btn btn-primary rounded-xl" onClick={onOpen}>
-            Add Client <AddOutlinedIcon />
-          </a>
+          <button
+            className="btn btn-primary rounded-xl"
+            onClick={onOpen}
+          >
+            Add New Tenant
+          </button>
+          <button
+            className="btn btn-ghost rounded-xl"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </div>
     </>

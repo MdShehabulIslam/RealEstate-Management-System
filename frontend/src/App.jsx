@@ -102,26 +102,28 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App min-h-screen bg-base-200">
       {!isLoggedIn ? (
         <Login onLogin={handleLogin} />
       ) : (
         <>
           <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
-          <TableList
-            setTableData={setTableData}
-            tableData={tableData}
-            handleOpen={handleOpen}
-            searchTerm={searchTerm}
-            handleReset={handleReset}
-          />
-          <ModalForm
-            isOpen={isOpen}
-            OnSubmit={handleSubmit}
-            onClose={() => setIsOpen(false)}
-            mode={modalMode}
-            clientData={clientData}
-          />
+          <div className="container mx-auto px-4">
+            <TableList
+              setTableData={setTableData}
+              tableData={tableData}
+              handleOpen={handleOpen}
+              searchTerm={searchTerm || ""}
+              handleReset={handleReset}
+            />
+            <ModalForm
+              isOpen={isOpen}
+              OnSubmit={handleSubmit}
+              onClose={() => setIsOpen(false)}
+              mode={modalMode}
+              clientData={clientData}
+            />
+          </div>
         </>
       )}
     </div>

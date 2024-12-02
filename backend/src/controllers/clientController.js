@@ -67,9 +67,9 @@ export const searchClients = async (req, res) => {
 
 export const resetRentStatus = async (req, res) => {
   try {
-    const rowCount = await clientService.resetRentStatus();
-    if (rowCount > 0) {
-      res.status(200).json({ message: "All rent statuses reset to Pending." });
+    const updatedClients = await clientService.resetRentStatus();
+    if (updatedClients && updatedClients.length > 0) {
+      res.status(200).json(updatedClients);
     } else {
       res.status(404).json({ message: "No clients found to update." });
     }
@@ -78,3 +78,7 @@ export const resetRentStatus = async (req, res) => {
     res.status(500).json({ message: "Failed to reset rent statuses." });
   }
 };
+
+
+
+      
