@@ -80,7 +80,23 @@ export const searchClients = async (searchTerm) => {
   return rows;
 };
 
-export const resetRentStatus = async () => {
+export const resetRentStatus = async (clientId) => {
+  try {
+    const { rows } = await query(
+      `UPDATE clients 
+       SET rent_status = NOT rent_status 
+       WHERE id = $1
+       RETURNING id, name, email, contact, house_no, street, postal_code, rent_amount, rent_status`,
+      [clientId]
+    );
+    return rows[0];
+  } catch (error) {
+    console.error('Error in resetRentStatus service:', error);
+    throw error;
+  }
+};
+
+export const resetAllRentStatus = async () => {
   try {
     const { rows } = await query(
       `UPDATE clients 
@@ -89,7 +105,7 @@ export const resetRentStatus = async () => {
     );
     return rows;
   } catch (error) {
-    console.error('Error in resetRentStatus service:', error);
+    console.error('Error in resetAllRentStatus service:', error);
     throw error;
   }
 };
