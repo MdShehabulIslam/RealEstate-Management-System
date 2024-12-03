@@ -32,7 +32,10 @@ export default function TableList({
 
   const [error, setError] = useState(null);
 
-  const filteredData = tableData.filter((client) => {
+  // Sort data by ID before filtering
+  const sortedData = [...tableData].sort((a, b) => a.id - b.id);
+
+  const filteredData = sortedData.filter((client) => {
     const rentStatusText = client.rent_status ? "Paid" : "Pending";
 
     const contactWithoutSpaces = client.contact.replace(/\s+/g, "");
