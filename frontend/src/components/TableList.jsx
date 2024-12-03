@@ -116,10 +116,10 @@ export default function TableList({
                 <tr>
                   <th>Tenant Name</th>
                   <th>Contact Info</th>
-                  <th>Property Details</th>
-                  <th>Monthly Rent</th>
+                  <th>Address</th>
+                  <th>Rent Amount</th>
                   <th className={"text-center"}>Rent Status ({month} {year})</th>
-                  <th>Actions</th>
+                  <th className="text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,7 +157,7 @@ export default function TableList({
                         <div>{client.street}</div>
                         <div>Postal: {client.postal_code}</div>
                       </td>
-                      <td className={"text-center"}>${client.rent_amount}</td>
+                      <td>{client.rent_amount}.00</td>
                       <td className="text-center">
                         <div 
                           className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 ${
