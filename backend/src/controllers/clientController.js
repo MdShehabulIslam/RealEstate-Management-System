@@ -68,17 +68,21 @@ export const searchClients = async (req, res) => {
 export const resetRentStatus = async (req, res) => {
   try {
     const updatedClients = await clientService.resetRentStatus();
-    if (updatedClients && updatedClients.length > 0) {
-      res.status(200).json(updatedClients);
-    } else {
-      res.status(404).json({ message: "No clients found to update." });
+    
+    if (!updatedClients || updatedClients.length === 0) {
+      return res.status(404).json({ 
+        success: false,
+        message: "No clients found to update." 
+      });
     }
+
+    return res.status(200).json(updatedClients);
   } catch (error) {
-    console.error("Error resetting rent statuses:", error);
-    res.status(500).json({ message: "Failed to reset rent statuses." });
+    console.error("Error in resetRentStatus controller:", error);
+    return res.status(500).json({ 
+      success: false,
+      message: "Failed to reset rent statuses. Please try again.",
+      error: error.message 
+    });
   }
 };
-
-
-
-      

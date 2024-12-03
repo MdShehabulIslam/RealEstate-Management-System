@@ -81,10 +81,15 @@ export const searchClients = async (searchTerm) => {
 };
 
 export const resetRentStatus = async () => {
-  const { rows } = await query(
-    `UPDATE clients SET rent_status = false
-     RETURNING *
-     ORDER BY id ASC`
-  );
-  return rows;
+  try {
+    const { rows } = await query(
+      `UPDATE clients 
+       SET rent_status = false 
+       RETURNING id, name, email, contact, house_no, street, postal_code, rent_amount, rent_status`
+    );
+    return rows;
+  } catch (error) {
+    console.error('Error in resetRentStatus service:', error);
+    throw error;
+  }
 };
