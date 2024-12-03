@@ -101,13 +101,27 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setTableData([]);
+    setSearchTerm("");
+    setIsOpen(false);
+    setModalMode("add");
+    setClientData(null);
+    setError(null);
+  };
+
   return (
     <div className="App min-h-screen bg-base-200">
       {!isLoggedIn ? (
         <Login onLogin={handleLogin} />
       ) : (
         <>
-          <NavBar onOpen={() => handleOpen("add")} onSearch={setSearchTerm} />
+          <NavBar 
+            onOpen={() => handleOpen("add")} 
+            onSearch={setSearchTerm} 
+            handleLogout={handleLogout}
+          />
           <div className="container mx-auto px-4">
             <TableList
               setTableData={setTableData}

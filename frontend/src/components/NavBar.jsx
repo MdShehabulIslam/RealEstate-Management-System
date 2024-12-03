@@ -2,6 +2,14 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HomeIcon from "@mui/icons-material/Home";
 
 export default function NavBar({ onOpen, onSearch, handleLogout }) {
+  const handleLogoutClick = async () => {
+    try {
+      await handleLogout();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className="navbar bg-base-100 shadow-lg px-4">
@@ -25,7 +33,7 @@ export default function NavBar({ onOpen, onSearch, handleLogout }) {
           </button>
           <button
             className="btn btn-error btn-outline hover:btn-error rounded-xl"
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
           >
             Logout
           </button>
