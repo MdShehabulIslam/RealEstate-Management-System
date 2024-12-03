@@ -24,7 +24,7 @@ export default function NavBar({ onOpen, onSearch, handleLogout }) {
             Add New Tenant
           </button>
           <button
-            className="btn btn-ghost rounded-xl"
+            className="btn btn-error btn-outline hover:btn-error rounded-xl"
             onClick={handleLogout}
           >
             Logout

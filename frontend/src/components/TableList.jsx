@@ -145,16 +145,40 @@ export default function TableList({
                         <div>Postal: {client.postal_code}</div>
                       </td>
                       <td className={"text-center"}>${client.rent_amount}</td>
-                      <td>
-                        <button
-                          className={`btn rounded-full w-30 ${
-                            client.rent_status
-                              ? `btn-success w-full`
-                              : `btn-outline btn-error`
+                      <td className="text-center">
+                        <div 
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-all duration-200 ${
+                            client.rent_status 
+                            ? 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200' 
+                            : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
                           }`}
+                          onClick={async () => {
+                            try {
+                              const response = await axios.put(
+                                `http://localhost:3000/api/clients/${client.id}`,
+                                { ...client, rent_status: !client.rent_status }
+                              );
+                              if (response.status === 200) {
+                                setTableData(prevData =>
+                                  prevData.map(item =>
+                                    item.id === client.id ? { ...item, rent_status: !item.rent_status } : item
+                                  )
+                                );
+                              }
+                            } catch (err) {
+                              console.error("Error updating rent status:", err);
+                            }
+                          }}
                         >
-                          {client.rent_status ? "Paid" : "Unpaid"}
-                        </button>
+                          <span className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${
+                              client.rent_status 
+                                ? 'bg-green-500' 
+                                : 'bg-red-500'
+                            }`} />
+                            {client.rent_status ? 'Paid' : 'Unpaid'}
+                          </span>
+                        </div>
                       </td>
                       <td className="flex gap-2">
                         <button
@@ -185,15 +209,22 @@ export default function TableList({
           <div key={client.id} className="bg-base-200 p-4 rounded-lg shadow">
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-bold">{client.name}</h3>
-              <button
-                className={`btn btn-sm rounded-full ${
-                  client.rent_status
-                    ? `btn-success`
-                    : `btn-outline btn-accent`
+              <div 
+                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-all duration-200 ${
+                  client.rent_status 
+                  ? 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200' 
+                  : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
                 }`}
               >
-                {client.rent_status ? "Paid" : "Pending"}
-              </button>
+                <span className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${
+                    client.rent_status 
+                      ? 'bg-green-500' 
+                      : 'bg-red-500'
+                  }`} />
+                  {client.rent_status ? 'Paid' : 'Unpaid'}
+                </span>
+              </div>
             </div>
             <div className="space-y-2">
               <p className="text-sm"><span className="font-semibold">Email:</span> {client.email}</p>
