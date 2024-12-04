@@ -30,7 +30,7 @@ export default function NavBar({ onOpen, onSearch, handleLogout }) {
             <input
               type="text"
               placeholder="Search tenants..."
-              className="input input-bordered w-full max-w-xs pl-10 pr-4 bg-base-200 focus:bg-base-100 transition-colors duration-200"
+              className="search-input"
               onChange={(e) => onSearch(e.target.value)}
             />
           </div>
@@ -38,10 +38,10 @@ export default function NavBar({ onOpen, onSearch, handleLogout }) {
         
         <div className="flex items-center gap-2">
           <button
-            className="btn btn-primary"
+            className="add-tenant-btn"
             onClick={onOpen}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
             Add Tenant
