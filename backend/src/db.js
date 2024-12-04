@@ -18,6 +18,7 @@ if (!PG_USER || !PG_HOST || !PG_DATABASE || !PG_PASSWORD || !PG_PORT) {
   process.exit(1);
 }
 
+
 const db = new pg.Client({
   user: PG_USER,
   host: PG_HOST,
