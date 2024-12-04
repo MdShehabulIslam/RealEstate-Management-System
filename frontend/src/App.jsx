@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import ModalForm from "./components/ModalForm";
 import NavBar from "./components/NavBar";
 import TableList from "./components/TableList";
 import Login from "./components/Login";
 import axios from "axios";
+
+// Configure axios defaults
+axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.timeout = 5000;
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,21 +19,49 @@ function App() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchClients = async () => {
+  const fetchClients = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
     try {
-      const response = await axios.get("http://localhost:3000/api/clients");
-      setTableData(response.data);
-    } catch (err) {
-      setError(err.message);
+      console.log('Fetching clients...');
+      const response = await axios.get("/api/clients");
+      console.log('Response:', response);
+      console.log('Received data:', response.data);
+      
+      if (Array.isArray(response.data)) {
+        setTableData(response.data);
+        console.log('Table data updated:', response.data);
+      } else {
+        console.error('Received non-array data:', response.data);
+        setError('Invalid data format received from server');
+      }
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      if (error.response) {
+        console.error('Response error:', {
+          data: error.response.data,
+          status: error.response.status,
+          headers: error.response.headers
+        });
+      } else if (error.request) {
+        console.error('Request error:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+      setError("Error fetching clients: " + (error.response?.data?.message || error.message));
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
+      console.log('Initial data fetch...');
       fetchClients();
     }
-  }, [isLoggedIn]);
+  }, [fetchClients, isLoggedIn]);
 
   const handleOpen = (mode, client) => {
     setClientData(client);
@@ -40,19 +73,20 @@ function App() {
     if (modalMode === "add") {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/clients",
+          "/api/clients",
           newClientData
         );
         console.log("Client added:", response.data);
         setTableData((prevData) => [...prevData, response.data]);
       } catch (error) {
         console.error("Error adding client:", error);
+        setError("Error adding client: " + (error.response?.data?.message || error.message));
       }
     } else {
       console.log("Updating client with ID:", clientData.id);
       try {
         const response = await axios.put(
-          `http://localhost:3000/api/clients/${clientData.id}`,
+          `/api/clients/${clientData.id}`,
           newClientData
         );
         console.log("Client updated:", response.data);
@@ -63,6 +97,7 @@ function App() {
         );
       } catch (error) {
         console.error("Error updating client:", error);
+        setError("Error updating client: " + (error.response?.data?.message || error.message));
       }
     }
   };
@@ -74,10 +109,10 @@ function App() {
     if (confirmReset) {
       try {
         // Step 1: Reset rent statuses on the backend
-        await axios.post("http://localhost:3000/api/clients/reset-rent-status");
+        await axios.post("/api/clients/reset-rent-status");
 
         // Step 2: Fetch the updated data from the backend
-        const response = await axios.get("http://localhost:3000/api/clients");
+        const response = await axios.get("/api/clients");
 
         // Step 3: Update the local state with the updated data from the backend
         setTableData(response.data);
@@ -127,8 +162,10 @@ function App() {
               setTableData={setTableData}
               tableData={tableData}
               handleOpen={handleOpen}
-              searchTerm={searchTerm || ""}
+              searchTerm={searchTerm}
               handleReset={handleReset}
+              isLoading={isLoading}
+              error={error}
             />
             <ModalForm
               isOpen={isOpen}

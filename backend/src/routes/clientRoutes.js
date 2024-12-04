@@ -3,14 +3,19 @@ import * as clientController from "../controllers/clientController.js";
 
 const router = express.Router();
 
-// Reset rent status route should come before the search route
-router.post("/clients/reset-rent-status", clientController.resetRentStatus);
+// Search route
+router.get("/clients/search", clientController.searchClients);
 
-// Other routes
+// Reset all rent statuses route
+router.post("/clients/reset-rent-status", clientController.resetAllRentStatus);
+
+// Individual client routes
 router.get("/clients", clientController.getClients);
 router.post("/clients", clientController.createClient);
 router.put("/clients/:id", clientController.updateClient);
 router.delete("/clients/:id", clientController.deleteClient);
-router.get("/clients/search", clientController.searchClients);
+
+// Reset individual client rent status
+router.put("/clients/:id/reset-rent", clientController.resetRentStatus);
 
 export default router;
